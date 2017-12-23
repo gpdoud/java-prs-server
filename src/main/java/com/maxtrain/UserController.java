@@ -1,15 +1,28 @@
 package com.maxtrain;
 
+import java.util.ArrayList;
+import java.util.Date;
+
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
+import com.maxtrain.utility.JsonResponse;
+
+@CrossOrigin
+@RestController
 @RequestMapping("/Users")
 public class UserController {
+	
+	private final Logger logger = org.slf4j.LoggerFactory.getLogger(this.getClass());
 
 		@Autowired
 		private UserRepository userRepository;
+		
+		@PostMapping("/About")
+		public @ResponseBody JsonResponse About(@RequestBody JsonResponse param) {
+			return param;
+		}
 		
 		@GetMapping("/List")
 		public @ResponseBody Iterable<User> List() {
@@ -18,28 +31,36 @@ public class UserController {
 		}
 		
 		@GetMapping("/Get")
-		public @ResponseBody User Get(@RequestParam int id) {
+		public @ResponseBody Iterable<User> Get(@RequestParam int id) {
+			ArrayList<User> users = new ArrayList<User>();
 			User user = userRepository.findOne(id);
-			return user;
+			if(user != null) {
+				users.add(user);
+			}
+			return users;
 		}
 		
 		@PostMapping("/Create")
-		public @ResponseBody String Create(@RequestBody User user) {
+		public @ResponseBody JsonResponse Create(@RequestBody User user) {
+			user.setDatecreated(new Date());
 			userRepository.save(user);
-			return "Created!";
+			return new JsonResponse("Ok", "Successfully created!", "Created!");
 		}
-		
+
 		@PostMapping("/Change")
-		public @ResponseBody String Change(@RequestBody User user) {
+		public @ResponseBody JsonResponse Change(@RequestBody User user) {
 			userRepository.save(user);
-			return "Modified!";
+			logger.info(user.getUsername());
+			return new JsonResponse("Ok", "Successfully changed!", "Modified!");
 		}
 		
 		@PostMapping("/Remove")
-		public @ResponseBody String Remove(@RequestBody User user) {
+		public @ResponseBody JsonResponse Remove(@RequestBody User user) {
 			userRepository.delete(user);
-			return "Deleted!";
+			return new JsonResponse("Ok", "Successfully deleted!", "Deleted!");
 		}
 		
 
 }
+
+
