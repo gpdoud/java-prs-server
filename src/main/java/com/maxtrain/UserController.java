@@ -19,6 +19,11 @@ public class UserController {
 		@Autowired
 		private UserRepository userRepository;
 		
+		@PostMapping("/Authenticate")
+		public @ResponseBody Iterable<User> Authenticate(@RequestBody User user) {
+			return userRepository.findByUsernameAndPassword(user.getUsername(), user.getPassword());
+		}
+		
 		@PostMapping("/About")
 		public @ResponseBody JsonResponse About(@RequestBody JsonResponse param) {
 			return param;
