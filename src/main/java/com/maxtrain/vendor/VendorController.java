@@ -1,44 +1,57 @@
 package com.maxtrain.vendor;
 
+import java.util.ArrayList;
+import java.util.Date;
+
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
+import com.maxtrain.User;
+import com.maxtrain.utility.JsonResponse;
+
+@RestController
 @RequestMapping("/Vendors")
 public class VendorController {
 	
+	private final Logger logger = org.slf4j.LoggerFactory.getLogger(this.getClass());
+
 	@Autowired
 	private VendorRepository vendorRepository;
 	
 	@GetMapping("/List")
 	public @ResponseBody Iterable<Vendor> List() {
-		Iterable<Vendor> vendors = vendorRepository.findAll();
-		return vendors;
+		return vendorRepository.findAll();
 	}
 	
 	@GetMapping("/Get")
-	public @ResponseBody Vendor Get(@RequestParam int id) {
+	public @ResponseBody Iterable<Vendor> Get(@RequestParam int id) {
+		ArrayList<Vendor> vendors = new ArrayList<Vendor>();
 		Vendor vendor = vendorRepository.findOne(id);
-		return vendor;
+		if(vendor != null) {
+			vendors.add(vendor);
+		}
+		return vendors;
 	}
 	
 	@PostMapping("/Create")
-	public @ResponseBody String Create(@RequestBody Vendor vendor) {
+	public @ResponseBody JsonResponse Create(@RequestBody Vendor vendor) {
+		vendor.setDatecreated(new Date());
 		vendorRepository.save(vendor);
-		return "Created!";
+		return new JsonResponse("Ok", "Successfully created!", "Created!");
 	}
 	
 	@PostMapping("/Change")
-	public @ResponseBody String Change(@RequestBody Vendor vendor) {
+	public @ResponseBody JsonResponse Change(@RequestBody Vendor vendor) {
 		vendorRepository.save(vendor);
-		return "Modified!";
+		return new JsonResponse("Ok", "Successfully changed!", "Changed!");
 	}
 	
 	@PostMapping("/Remove")
-	public @ResponseBody String Remove(@RequestBody Vendor vendor) {
+	public @ResponseBody JsonResponse Remove(@RequestBody Vendor vendor) {
 		vendorRepository.delete(vendor);
-		return "Deleted!";
+		return new JsonResponse("Ok", "Successfully removed!", "Removed!");
 	}
 	
 
