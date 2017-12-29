@@ -11,7 +11,8 @@ import org.springframework.web.bind.annotation.*;
 import com.maxtrain.User;
 import com.maxtrain.utility.JsonResponse;
 
-@RestController
+@CrossOrigin
+@Controller
 @RequestMapping("/Vendors")
 public class VendorController {
 	
