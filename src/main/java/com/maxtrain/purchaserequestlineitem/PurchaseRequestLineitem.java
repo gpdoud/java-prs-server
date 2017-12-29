@@ -3,11 +3,15 @@ package com.maxtrain.purchaserequestlineitem;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.maxtrain.User;
 import com.maxtrain.product.Product;
 import com.maxtrain.purchaserequest.PurchaseRequest;
 
 @Entity
+//@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="Id")
 public class PurchaseRequestLineitem {
 
 	@Id
@@ -16,6 +20,7 @@ public class PurchaseRequestLineitem {
 	@ManyToOne
 	@JoinColumn(name = "PurchaseRequestID")
 	@JsonBackReference
+	//@JsonIgnore
 	private PurchaseRequest purchaseRequest;
 	@ManyToOne
 	@JoinColumn(name = "ProductID")
