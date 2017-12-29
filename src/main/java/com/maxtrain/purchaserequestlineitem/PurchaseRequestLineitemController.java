@@ -7,49 +7,49 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import com.maxtrain.purchaserequest.*;
+import com.maxtrain.purchaserequestlineitem.*;
 import com.maxtrain.utility.JsonResponse;
 
 @CrossOrigin
 @Controller
-@RequestMapping("/Request")
+@RequestMapping("/PurchaseRequestLineitems")
 public class PurchaseRequestLineitemController {
 	
 	private final Logger logger = org.slf4j.LoggerFactory.getLogger(this.getClass());
 	
 	@Autowired
-	private PurchaseRequestRepository purchaseRequestRepository;
+	private PurchaseRequestLineitemRepository purchaseRequestLineitemRepository;
 
 	@GetMapping("/List")
-	public @ResponseBody Iterable<PurchaseRequest> List() {
-		return purchaseRequestRepository.findAll();
+	public @ResponseBody Iterable<PurchaseRequestLineitem> List() {
+		return purchaseRequestLineitemRepository.findAll();
 	}
 	
 	@GetMapping("/Get")
-	public @ResponseBody Iterable<PurchaseRequest> Get(@RequestParam int id) {
-		ArrayList<PurchaseRequest> purchaseRequests = new ArrayList<PurchaseRequest>();
-		PurchaseRequest purchaseRequest = purchaseRequestRepository.findOne(id);
-		if(purchaseRequest != null) {
-			purchaseRequests.add(purchaseRequest);
+	public @ResponseBody Iterable<PurchaseRequestLineitem> Get(@RequestParam int id) {
+		ArrayList<PurchaseRequestLineitem> PurchaseRequestLineitems = new ArrayList<PurchaseRequestLineitem>();
+		PurchaseRequestLineitem PurchaseRequestLineitem = purchaseRequestLineitemRepository.findOne(id);
+		if(PurchaseRequestLineitem != null) {
+			PurchaseRequestLineitems.add(PurchaseRequestLineitem);
 		}
-		return purchaseRequests;
+		return PurchaseRequestLineitems;
 	}
 	
 	@PostMapping("/Create")
-	public @ResponseBody JsonResponse Create(@RequestBody PurchaseRequest purchaseRequest) {
-		purchaseRequestRepository.save(purchaseRequest);
+	public @ResponseBody JsonResponse Create(@RequestBody PurchaseRequestLineitem PurchaseRequestLineitem) {
+		purchaseRequestLineitemRepository.save(PurchaseRequestLineitem);
 		return new JsonResponse("Ok", "Successfully created!", "Created!");
 	}
 	
 	@PostMapping("/Change")
-	public @ResponseBody JsonResponse Change(@RequestBody PurchaseRequest purchaseRequest) {
-		purchaseRequestRepository.save(purchaseRequest);
+	public @ResponseBody JsonResponse Change(@RequestBody PurchaseRequestLineitem PurchaseRequestLineitem) {
+		purchaseRequestLineitemRepository.save(PurchaseRequestLineitem);
 		return new JsonResponse("Ok", "Successfully changed!", "Changed!");
 	}
 	
 	@PostMapping("/Remove")
-	public @ResponseBody JsonResponse Remove(@RequestBody PurchaseRequest purchaseRequest) {
-		purchaseRequestRepository.delete(purchaseRequest);
+	public @ResponseBody JsonResponse Remove(@RequestBody PurchaseRequestLineitem PurchaseRequestLineitem) {
+		purchaseRequestLineitemRepository.delete(PurchaseRequestLineitem);
 		return new JsonResponse("Ok", "Successfully removed!", "Removed!");
 	}
 }

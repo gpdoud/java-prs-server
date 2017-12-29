@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.maxtrain.User;
 import com.maxtrain.purchaserequestlineitem.PurchaseRequestLineitem;
 import com.maxtrain.status.Status;
@@ -27,14 +28,15 @@ public class PurchaseRequest {
 	private Status status;
 	private double total;
 	private Timestamp submitteddate;
-	@OneToMany(mappedBy = "purchaserequest", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private List<PurchaseRequestLineitem> lineitems;
+	@OneToMany(mappedBy = "purchaseRequest", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JsonManagedReference
+	private List<PurchaseRequestLineitem> purchaseRequestLineitems;
 	
 	public PurchaseRequest() {}
 
 	public PurchaseRequest(int id, User user, String description, String justification, Timestamp dateneeded,
 			String deliverymode, Status status, double total, Timestamp submitteddate,
-			List<PurchaseRequestLineitem> lineitems) {
+			List<PurchaseRequestLineitem> purchaseRequestLineitems) {
 		super();
 		this.id = id;
 		this.user = user;
@@ -45,7 +47,7 @@ public class PurchaseRequest {
 		this.status = status;
 		this.total = total;
 		this.submitteddate = submitteddate;
-		this.lineitems = lineitems;
+		this.purchaseRequestLineitems = purchaseRequestLineitems;
 	}
 
 	public int getId() {
@@ -120,12 +122,12 @@ public class PurchaseRequest {
 		this.submitteddate = submitteddate;
 	}
 
-	public List<PurchaseRequestLineitem> getLineitems() {
-		return lineitems;
+	public List<PurchaseRequestLineitem> getPurchaseRequestLineitems() {
+		return purchaseRequestLineitems;
 	}
 
-	public void setLineitems(List<PurchaseRequestLineitem> lineitems) {
-		this.lineitems = lineitems;
+	public void setPurchaseRequestLineitems(List<PurchaseRequestLineitem> purchaseRequestLineitems) {
+		this.purchaseRequestLineitems = purchaseRequestLineitems;
 	}
 	
 }
