@@ -1,6 +1,7 @@
 package com.maxtrain.product;
 
 import java.util.ArrayList;
+
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,12 +13,12 @@ import com.maxtrain.utility.JsonResponse;
 @Controller
 @RequestMapping("/Products")
 public class ProductController {
-
+	
 	private final Logger logger = org.slf4j.LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	private ProductRepository productRepository;
-	
+
 	@GetMapping("/List")
 	public @ResponseBody Iterable<Product> List() {
 		return productRepository.findAll();

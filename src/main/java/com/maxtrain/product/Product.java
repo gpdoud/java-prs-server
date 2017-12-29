@@ -4,23 +4,29 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
+import com.maxtrain.vendor.Vendor;
 @Entity
 public class Product {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private int id;
-	private int vendorID;
+	@ManyToOne
+	@JoinColumn(name="vendorID")
+	private Vendor vendor;
 	private String partNumber;
 	private String name;
 	private double price;
 	private String unit;
 	private String photoPath;
 	
-	public Product(int id, int vendorID, String partNumber, String name, double price, String unit, String photoPath) {
+	public Product(int id, Vendor vendor, String partNumber, String name, double price, String unit, String photoPath) {
 		super();
 		this.id = id;
-		this.vendorID = vendorID;
+		this.vendor = vendor;
 		this.partNumber = partNumber;
 		this.name = name;
 		this.price = price;
@@ -37,14 +43,14 @@ public class Product {
 		this.id = id;
 	}
 
-	public int getVendorID() {
-		return vendorID;
+	public Vendor getVendor() {
+		return vendor;
 	}
-
-	public void setVendorID(int vendorID) {
-		this.vendorID = vendorID;
+	
+	public void setVendor(Vendor vendor) {
+		this.vendor = vendor;
 	}
-
+	
 	public String getPartNumber() {
 		return partNumber;
 	}
