@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import com.maxtrain.purchaserequest.PurchaseRequest;
+import com.maxtrain.purchaserequest.PurchaseRequestRepository;
 import com.maxtrain.purchaserequestlineitem.*;
 import com.maxtrain.utility.JsonResponse;
 
@@ -19,6 +21,8 @@ public class PurchaseRequestLineitemController {
 	
 	@Autowired
 	private PurchaseRequestLineitemRepository purchaseRequestLineitemRepository;
+	@Autowired
+	private PurchaseRequestRepository purchaseRequestRepository;
 
 	@GetMapping("/List")
 	public @ResponseBody Iterable<PurchaseRequestLineitem> List() {
@@ -38,18 +42,35 @@ public class PurchaseRequestLineitemController {
 	@PostMapping("/Create")
 	public @ResponseBody JsonResponse Create(@RequestBody PurchaseRequestLineitem PurchaseRequestLineitem) {
 		purchaseRequestLineitemRepository.save(PurchaseRequestLineitem);
-		return new JsonResponse("Ok", "Successfully created!", "Created!");
+		RecalcPurchaseRequestTotal(PurchaseRequestLineitem.getPurchaseRequest().getId());
+		return new JsonResponse("Ok", "Successfully created!", "Created! - PurchaseRequest total recalculated.");
 	}
 	
 	@PostMapping("/Change")
 	public @ResponseBody JsonResponse Change(@RequestBody PurchaseRequestLineitem PurchaseRequestLineitem) {
 		purchaseRequestLineitemRepository.save(PurchaseRequestLineitem);
-		return new JsonResponse("Ok", "Successfully changed!", "Changed!");
+		RecalcPurchaseRequestTotal(PurchaseRequestLineitem.getPurchaseRequest().getId());
+		return new JsonResponse("Ok", "Successfully changed!", "Changed! - PurchaseRequest total recalculated.");
 	}
 	
 	@PostMapping("/Remove")
 	public @ResponseBody JsonResponse Remove(@RequestBody PurchaseRequestLineitem PurchaseRequestLineitem) {
 		purchaseRequestLineitemRepository.delete(PurchaseRequestLineitem);
-		return new JsonResponse("Ok", "Successfully removed!", "Removed!");
+		RecalcPurchaseRequestTotal(PurchaseRequestLineitem.getPurchaseRequest().getId());
+		return new JsonResponse("Ok", "Successfully removed!", "Removed! - PurchaseRequest total recalculated.");
+	}
+	
+	private void RecalcPurchaseRequestTotal(int purchaseRequestId) {
+		logger.info("Recalculating for purchase request id " + purchaseRequestId);
+		double total = 0;
+		PurchaseRequest pr = purchaseRequestRepository.findOne(purchaseRequestId);
+		logger.info("Purchase request has " + pr.getPurchaseRequestLineitems().size() + " lines.");
+		for(PurchaseRequestLineitem prli : pr.getPurchaseRequestLineitems()) {
+			total += prli.getQuantity() * prli.getProduct().getPrice();
+			logger.info("** Line quantity is " + prli.getQuantity() + " and price is " + prli.getProduct().getPrice());
+		}
+		logger.info("New purchase request total is " + total);
+		pr.setTotal(total);
+		purchaseRequestRepository.save(pr);
 	}
 }
