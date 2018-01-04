@@ -1,6 +1,7 @@
 package com.maxtrain.purchaserequest;
 
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.*;
@@ -24,13 +25,13 @@ public class PurchaseRequest {
 	private User user;
 	private String description;
 	private String justification;
-	private Timestamp dateneeded;
+	private Date dateneeded;
 	private String deliverymode;
 	@ManyToOne
 	@JoinColumn(name = "StatusID")
 	private Status status;
 	private double total;
-	private Timestamp submitteddate;
+	private Date submitteddate;
 	@OneToMany(mappedBy = "purchaseRequest", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JsonManagedReference
 	private List<PurchaseRequestLineitem> purchaseRequestLineitems;
@@ -85,11 +86,11 @@ public class PurchaseRequest {
 		this.justification = justification;
 	}
 
-	public Timestamp getDateneeded() {
+	public Date getDateneeded() {
 		return dateneeded;
 	}
 
-	public void setDateneeded(Timestamp dateneeded) {
+	public void setDateneeded(Date dateneeded) {
 		this.dateneeded = dateneeded;
 	}
 
@@ -117,7 +118,7 @@ public class PurchaseRequest {
 		this.total = total;
 	}
 
-	public Timestamp getSubmitteddate() {
+	public Date getSubmitteddate() {
 		return submitteddate;
 	}
 

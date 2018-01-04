@@ -20,9 +20,9 @@ public class UserController {
 		@Autowired
 		private UserRepository userRepository;
 		
-		@PostMapping("/Authenticate")
-		public @ResponseBody Iterable<User> Authenticate(@RequestBody User user) {
-			return userRepository.findByUsernameAndPassword(user.getUsername(), user.getPassword());
+		@GetMapping("/Authenticate")
+		public @ResponseBody Iterable<User> Authenticate(@RequestParam String username, @RequestParam String password) {
+			return userRepository.findByUsernameAndPassword(username, password);
 		}
 		
 		@PostMapping("/About")
