@@ -1,6 +1,8 @@
 package com.maxtrain.purchaserequest;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import com.maxtrain.purchaserequest.*;
+import com.maxtrain.status.StatusRepository;
 import com.maxtrain.utility.JsonResponse;
 
 @CrossOrigin
@@ -19,6 +22,8 @@ public class PurchaseRequestController {
 	
 	@Autowired
 	private PurchaseRequestRepository purchaseRequestRepository;
+	@Autowired
+	private StatusRepository statusRepository;
 
 	@GetMapping("/List")
 	public @ResponseBody Iterable<PurchaseRequest> List() {
@@ -37,6 +42,8 @@ public class PurchaseRequestController {
 	
 	@PostMapping("/Create")
 	public @ResponseBody JsonResponse Create(@RequestBody PurchaseRequest purchaseRequest) {
+		purchaseRequest.setSubmitteddate(new Timestamp(System.currentTimeMillis()));
+		purchaseRequest.setStatus(statusRepository.findOne(1)); // NEW
 		purchaseRequestRepository.save(purchaseRequest);
 		return new JsonResponse("Ok", "Successfully created!", "Created!");
 	}

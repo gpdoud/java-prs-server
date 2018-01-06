@@ -32,7 +32,7 @@ public class PurchaseRequest {
 	private Status status;
 	private double total;
 	private Date submitteddate;
-	@OneToMany(mappedBy = "purchaseRequest", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "purchaseRequest", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
 	@JsonManagedReference
 	private List<PurchaseRequestLineitem> purchaseRequestLineitems;
 	

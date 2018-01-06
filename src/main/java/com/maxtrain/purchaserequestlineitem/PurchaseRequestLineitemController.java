@@ -2,6 +2,8 @@ package com.maxtrain.purchaserequestlineitem;
 
 import java.util.ArrayList;
 
+import javax.persistence.criteria.Predicate;
+
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,6 +20,8 @@ import com.maxtrain.utility.JsonResponse;
 public class PurchaseRequestLineitemController {
 	
 	private final Logger logger = org.slf4j.LoggerFactory.getLogger(this.getClass());
+	
+	private final boolean skipRecalcLineItemTotal = true;
 	
 	@Autowired
 	private PurchaseRequestLineitemRepository purchaseRequestLineitemRepository;
@@ -48,6 +52,7 @@ public class PurchaseRequestLineitemController {
 	
 	@PostMapping("/Change")
 	public @ResponseBody JsonResponse Change(@RequestBody PurchaseRequestLineitem PurchaseRequestLineitem) {
+		logger.info("Server PRLI: " + PurchaseRequestLineitem.toString());
 		purchaseRequestLineitemRepository.save(PurchaseRequestLineitem);
 		RecalcPurchaseRequestTotal(PurchaseRequestLineitem.getPurchaseRequest().getId());
 		return new JsonResponse("Ok", "Successfully changed!", "Changed! - PurchaseRequest total recalculated.");
@@ -55,8 +60,24 @@ public class PurchaseRequestLineitemController {
 	
 	@PostMapping("/Remove")
 	public @ResponseBody JsonResponse Remove(@RequestBody PurchaseRequestLineitem PurchaseRequestLineitem) {
-		purchaseRequestLineitemRepository.delete(PurchaseRequestLineitem);
-		RecalcPurchaseRequestTotal(PurchaseRequestLineitem.getPurchaseRequest().getId());
+		int prid = PurchaseRequestLineitem.getPurchaseRequest().getId();
+		PurchaseRequest pr = purchaseRequestRepository.findOne(prid);
+		int prliIdx = -1;
+		for(int idx = 0; idx < pr.getPurchaseRequestLineitems().size(); idx++) {
+			PurchaseRequestLineitem prli = pr.getPurchaseRequestLineitems().get(idx);
+			if(prli.getId() == PurchaseRequestLineitem.getId()) {
+				prliIdx = idx;
+			}
+		}
+		logger.debug("*** Removing PRLI.Id " + PurchaseRequestLineitem.getId());
+		logger.debug("*** Nullify reference to PurchaseRequest");
+		PurchaseRequestLineitem.setPurchaseRequest(null);
+		logger.debug("*** Save the PurchaseRequestLineitem");
+		purchaseRequestLineitemRepository.save(PurchaseRequestLineitem);
+		logger.debug("*** Remove it from the arraylist");
+		pr.getPurchaseRequestLineitems().remove(prliIdx);
+		logger.debug("*** PR removed. Recalc PR total");
+		RecalcPurchaseRequestTotal(prid);
 		return new JsonResponse("Ok", "Successfully removed!", "Removed! - PurchaseRequest total recalculated.");
 	}
 	

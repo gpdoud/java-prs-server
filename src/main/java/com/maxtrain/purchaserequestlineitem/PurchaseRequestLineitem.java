@@ -57,6 +57,14 @@ public class PurchaseRequestLineitem {
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
 	}
-	
+	@Override
+	public String toString() {
+		String msg = String.format("PRLIID: %d; PRID: %d, PID: %d", 
+				this.id, 
+				this.purchaseRequest != null ? this.purchaseRequest.getId() : -1, 
+				this.product != null ? this.product.getId() : -1
+		);
+		return msg;
+	}
 	
 }
