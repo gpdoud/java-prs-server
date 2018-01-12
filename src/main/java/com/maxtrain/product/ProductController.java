@@ -8,6 +8,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import com.maxtrain.utility.JsonResponse;
+import com.maxtrain.vendor.Vendor;
+import com.maxtrain.vendor.VendorRepository;
 
 @CrossOrigin
 @Controller
@@ -18,20 +20,31 @@ public class ProductController {
 
 	@Autowired
 	private ProductRepository productRepository;
+	@Autowired
+	private VendorRepository vendorRepository;
 
 	@GetMapping("/List")
 	public @ResponseBody Iterable<Product> List() {
-		return productRepository.findAll();
+		Iterable<Product> products = productRepository.findAll();
+		for(Product product : products) {
+			product.setVendor(getVendorById(product.getVendorId()));
+		}
+		return products;
 	}
 	
 	@GetMapping("/Get")
 	public @ResponseBody Iterable<Product> Get(@RequestParam int id) {
 		ArrayList<Product> products = new ArrayList<Product>();
 		Product product = productRepository.findOne(id);
+		product.setVendor(getVendorById(product.getVendorId()));
 		if(product != null) {
 			products.add(product);
 		}
 		return products;
+	}
+	
+	private Vendor getVendorById(int id) {
+		return vendorRepository.findOne(id);
 	}
 	
 	@PostMapping("/Create")
