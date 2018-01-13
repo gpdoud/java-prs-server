@@ -17,20 +17,24 @@ public class PurchaseRequestLineitem {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	@ManyToOne
-	@JoinColumn(name = "PurchaseRequestID")
-	@JsonBackReference
-	//@JsonIgnore
+//	@ManyToOne
+//	@JoinColumn(name = "PurchaseRequestID")
+//	@JsonBackReference
+//	//@JsonIgnore
+	private int purchaseRequestId;
+	@Transient
 	private PurchaseRequest purchaseRequest;
-	@ManyToOne
-	@JoinColumn(name = "ProductID")
+//	@ManyToOne
+//	@JoinColumn(name = "ProductID")
+	private int productId;
+	@Transient
 	private Product product;
 	private int quantity;
 	
 	public PurchaseRequestLineitem() {}
-	public PurchaseRequestLineitem(PurchaseRequest purchaseRequest, Product product, int quantity) {
-		this.purchaseRequest = purchaseRequest;
-		this.product = product;
+	public PurchaseRequestLineitem(int purchaseRequestId, int productId, int quantity) {
+		this.purchaseRequestId = purchaseRequestId;
+		this.productId = productId;
 		this.quantity = quantity;
 	}
 	public int getId() {
@@ -39,11 +43,23 @@ public class PurchaseRequestLineitem {
 	public void setId(int id) {
 		this.id = id;
 	}
+	public int getPurchaseRequestId() {
+		return this.purchaseRequestId;
+	}
+	public void setPurchaseRequestId(int purchaseRequestId) {
+		this.purchaseRequestId = purchaseRequestId;
+	}
 	public PurchaseRequest getPurchaseRequest() {
 		return purchaseRequest;
 	}
 	public void setPurchaseRequest(PurchaseRequest purchaseRequest) {
 		this.purchaseRequest = purchaseRequest;
+	}
+	public int getProductId() {
+		return this.productId;
+	}
+	public void setProductId(int productId) {
+		this.productId = productId;
 	}
 	public Product getProduct() {
 		return product;
