@@ -20,38 +20,37 @@ public class PurchaseRequest {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	@ManyToOne
-	@JoinColumn(name = "UserID")
+	private int userId;
+	@Transient
 	private User user;
 	private String description;
 	private String justification;
 	private Date dateneeded;
 	private String deliverymode;
-	@ManyToOne
-	@JoinColumn(name = "StatusID")
+	private int statusId;
+	@Transient
 	private Status status;
 	private double total;
 	private Date submitteddate;
-	@OneToMany(mappedBy = "purchaseRequest", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-	@JsonManagedReference
+//	@OneToMany(mappedBy = "purchaseRequest", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+//	@JsonManagedReference
+	@Transient
 	private List<PurchaseRequestLineitem> purchaseRequestLineitems;
 	
 	public PurchaseRequest() {}
 
-	public PurchaseRequest(int id, User user, String description, String justification, Timestamp dateneeded,
-			String deliverymode, Status status, double total, Timestamp submitteddate,
-			List<PurchaseRequestLineitem> purchaseRequestLineitems) {
+	public PurchaseRequest(int id, int userId, String description, String justification, Timestamp dateneeded,
+			String deliverymode, int statusId, double total, Timestamp submitteddate) {
 		super();
 		this.id = id;
-		this.user = user;
+		this.userId = userId;
 		this.description = description;
 		this.justification = justification;
 		this.dateneeded = dateneeded;
 		this.deliverymode = deliverymode;
-		this.status = status;
+		this.statusId = statusId;
 		this.total = total;
 		this.submitteddate = submitteddate;
-		this.purchaseRequestLineitems = purchaseRequestLineitems;
 	}
 
 	public int getId() {
@@ -62,10 +61,18 @@ public class PurchaseRequest {
 		this.id = id;
 	}
 
-	public User getUser() {
-		return user;
+	public int getUserId() {
+		return userId;
 	}
 
+	public void setUser(int userId) {
+		this.userId = userId;
+	}
+	
+	public User getUser() {
+		return this.user;
+	}
+	
 	public void setUser(User user) {
 		this.user = user;
 	}
@@ -100,6 +107,14 @@ public class PurchaseRequest {
 
 	public void setDeliverymode(String deliverymode) {
 		this.deliverymode = deliverymode;
+	}
+
+	public Integer getStatusId() {
+		return statusId;
+	}
+
+	public void setStatusId(int statusId) {
+		this.statusId = statusId;
 	}
 
 	public Status getStatus() {
